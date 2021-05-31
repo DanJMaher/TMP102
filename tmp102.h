@@ -41,4 +41,6 @@ void tmp102Enable(void);
 // for the serial connection.
 void tmp102Disable(void);
 
+static void tmp102Communicate(bool dir, uint8_t reg, uint16_t *data);
+
 #endif
