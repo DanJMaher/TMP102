@@ -19,19 +19,11 @@ void tmp102Begin(uint8_t addr, uint8_t port);
 // Receives the current temperature from the tmp102 device
 float tmp102GetTemp(void);
 
-// Reads the alert bit of the tmp102, which indicates whether the temperature has
-// equals or exeeds the limit set in the tmp102's high temp register. Returns 0 
-// on alert at default, or 1 if the alert polarity register has been toggled./
-bool tmp102Alert(void);
+// Upper alert level for the alert bit of the tmp102. Default is 80 c
+void tmp102SetHighLimit(uint16_t temp);
 
-// Adjusts whether tmp102Alert returns a 0 when alerting (default) or a 1./
-void tmp102AlertPolarity(bool polarity);
-
-// Upper alert level for the alert bit of the tmp102. 
-void tmp102SetHighLimit(uint32_t temp);
-
-// Lower alert level for the alert bit of the tmp102. 
-void tmp102SetLowLimit(uint32_t temp);
+// Lower alert level for the alert bit of the tmp102. Default is 75 c
+void tmp102SetLowLimit(uint16_t temp);
 
 // Enables the tmp102. The tmp102 is enabled by default, and this only needs to be
 // called if previously disabled vis tmp102Disable
@@ -41,6 +33,19 @@ void tmp102Enable(void);
 // for the serial connection.
 void tmp102Disable(void);
 
+// Reads the alert bit of the tmp102, which indicates whether the temperature has
+// equals or exeeds the limit set in the tmp102's high temp register. Returns 0 
+// on alert at default, or 1 if the alert polarity register has been toggled./
+bool tmp102Alert(void);
+
+// Adjusts whether tmp102Alert returns a 0 when alerting (default) or a 1.
+void tmp102AlertPolarity(bool polarity);
+
+// Internal method to simplify send/receive commands to the tmp102.
+// dir is defined as send/receive, reg is the tmp102 internal registers to 
+// send/receive the data from. If dir == send, *data is the 16 bit data
+// sent to reg. If dir == receive, *data is the 16 bit data received from
+// reg.
 static void tmp102Communicate(bool dir, uint8_t reg, uint16_t *data);
 
 #endif

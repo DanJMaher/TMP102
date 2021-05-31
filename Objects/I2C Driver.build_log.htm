@@ -1,0 +1,84 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.33.0.0
+Copyright (C) 2020 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Daniel Maher, University of Texas at Austin, LIC=----
+ 
+Tool Versions:
+Toolchain:       MDK-Lite  Version: 5.33.0.0
+Toolchain Path:  C:\Keil_v5\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.15
+Assembler:       Armasm.exe V6.15
+Linker/Locator:  ArmLink.exe V6.15
+Library Manager: ArmAr.exe V6.15
+Hex Converter:   FromElf.exe V6.15
+CPU DLL:         SARMCM3.DLL V5.33.0.0
+Dialog DLL:      DCM.DLL V1.17.3.0
+Target DLL:      lmidk-agdi.dll V???
+Dialog DLL:      TCM.DLL V1.48.0.0
+ 
+<h2>Project:</h2>
+G:\Google Drive\Documents\Programming\TM4C123 Practice\I2C Practice\TMP102 Driver\I2C Driver.uvprojx
+Project File Date:  05/30/2021
+
+<h2>Output:</h2>
+*** Using Compiler 'V6.15', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
+Build target 'Target 1'
+test.c(12): warning: In file included from...
+./tmp102.h(13): warning: In file included from...
+./tmp102.h(51): warning: no newline at end of file [-Wnewline-eof]
+#endif
+      ^
+test.c(12): warning: In file included from...
+./tmp102.h(51): warning: no newline at end of file [-Wnewline-eof]
+#endif
+      ^
+test.c(37): warning: implicit conversion loses integer precision: 'int' to 'uint8_t' (aka 'unsigned char') [-Wimplicit-int-conversion]
+                GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, 0x00 + (tmp102Alert() << 1));
+                ~~~~~~~~~~~~                              ~~~~~^~~~~~~~~~~~~~~~~~~~~~
+test.c(39): warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+                sprintf(str,"%d.%02u", (int) temp, (int) ((temp - (int) temp ) * 100) );
+                                                                ~ ^~~~~~~~~~
+test.c(97): warning: no newline at end of file [-Wnewline-eof]
+}
+ ^
+test.c(20): warning: no previous extern declaration for non-static variable 'temp' [-Wmissing-variable-declarations]
+float temp;
+      ^
+test.c(20): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+float temp;
+^
+test.c(21): warning: no previous extern declaration for non-static variable 'str' [-Wmissing-variable-declarations]
+char str[20];
+     ^
+test.c(21): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+char str[20];
+^
+test.c(12): warning: In file included from...
+./tmp102.h(49): warning: unused function 'tmp102Communicate' [-Wunused-function]
+static void tmp102Communicate(bool dir, uint8_t reg, uint16_t *data);
+            ^
+8 warnings generated.
+compiling test.c...
+linking...
+Program Size: Code=4296 RO-data=1184 RW-data=0 ZI-data=392  
+".\Objects\I2C Driver.axf" - 0 Error(s), 8 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.TM4C_DFP.1.1.0.pack
+                Keil.TM4C_DFP.1.1.0
+                Texas Instruments Tiva C Series Device Support and Examples
+
+<h2>Collection of Component include folders:</h2>
+  C:\Users\Dan\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123
+
+<h2>Collection of Component Files used:</h2>
+Build Time Elapsed:  00:00:00
+</pre>
+</body>
+</html>

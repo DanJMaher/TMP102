@@ -20,8 +20,8 @@
 #define     CR1 0x0080
 
 //For static tmp102Communicate method clarity
-#define send false
-#define receive true
+#define     send    0
+#define     receive 1
 
 //Signed 13-bit int received needs to be multiplied
 //by this value to get degrees in celsius
@@ -30,10 +30,12 @@
 uint32_t i2cPort;
 uint32_t address;
 uint16_t configRegData;
+bool alert;
 
 void tmp102Begin(uint8_t addr, uint8_t port){
     address = addr;
 
+    // Set hardware I2C port
     switch (port)
     {
         case 0:
@@ -50,44 +52,7 @@ void tmp102Begin(uint8_t addr, uint8_t port){
             break;
     }
 
-    // OLD
-    /*
-    // Set pointer register of tmp102 to the config register
-    I2CMasterSlaveAddrSet(i2cPort, address, false);
-    I2CMasterControl(i2cPort, I2C_MASTER_CMD_SINGLE_SEND);
-    I2CMasterDataPut(i2cPort, configReg);
-    while(I2CMasterBusy(i2cPort));
-    
-    // Receive current configuration and store locally
-    I2CMasterSlaveAddrSet(i2cPort, address, true);
-    I2CMasterControl(i2cPort, I2C_MASTER_CMD_BURST_RECEIVE_START);
-	while(I2CMasterBusy(i2cPort));
-	configRegMSB = I2CMasterDataGet(i2cPort);
-
-    I2CMasterControl(i2cPort, I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
-	while(I2CMasterBusy(i2cPort));
-	configRegLSB = I2CMasterDataGet(i2cPort) | EM;
-
-
-    // Set pointer register of tmp102 to the config register
-    I2CMasterSlaveAddrSet(i2cPort, address, false);
-    I2CMasterControl(i2cPort, I2C_MASTER_CMD_BURST_SEND_START);
-    I2CMasterDataPut(i2cPort, configReg);
-    while(I2CMasterBusy(i2cPort));
-
-    // Send back configuration with EM bit turned on
-    I2CMasterControl(i2cPort, I2C_MASTER_CMD_BURST_SEND_CONT);
-    I2CMasterDataPut(i2cPort, configRegMSB);
-    while(I2CMasterBusy(i2cPort));
-
-    I2CMasterControl(i2cPort, I2C_MASTER_CMD_BURST_SEND_FINISH);
-    I2CMasterDataPut(i2cPort, configRegLSB);
-    while(I2CMasterBusy(i2cPort));
-    */
-
-   //NEW
-
-   // Receive current configReg from tmp102, turn on EM bit and 
+   // Receive current configReg from tmp102, turn on Extended Mode bit and 
    // send back
     tmp102Communicate(receive, configReg, &configRegData);
     configRegData |= EM;
@@ -95,40 +60,15 @@ void tmp102Begin(uint8_t addr, uint8_t port){
 }
 
 void tmp102Enable(void){
-
+    // Turns off the Shutdown Mode bit in the config register of the tmp102
     configRegData &= ~SD;
     tmp102Communicate(send, configReg, &configRegData);
-
-    //OLD
-    /*
-    // Set pointer register of tmp102 to the config register
-    I2CMasterSlaveAddrSet(i2cPort, address, false);
-    I2CMasterControl(i2cPort, I2C_MASTER_CMD_BURST_SEND_START);
-    I2CMasterDataPut(i2cPort, configReg);
-    while(I2CMasterBusy(i2cPort));
-
-    I2CMasterControl(i2cPort, I2C_MASTER_CMD_BURST_SEND_FINISH);
-    I2CMasterDataPut(i2cPort, configRegMSB);
-    while(I2CMasterBusy(i2cPort));
-    */
 }
 
 void tmp102Disable(void){
+    // Turns on the Shutdown Mode bit in the config register of the tmp102
     configRegData |= SD;
     tmp102Communicate(send, configReg, &configRegData);
-
-    //OLD
-    /*
-    // Set pointer register of tmp102 to the config register
-    I2CMasterSlaveAddrSet(i2cPort, address, false);
-    I2CMasterControl(i2cPort, I2C_MASTER_CMD_BURST_SEND_START);
-    I2CMasterDataPut(i2cPort, configReg);
-    while(I2CMasterBusy(i2cPort));
-
-    I2CMasterControl(i2cPort, I2C_MASTER_CMD_BURST_SEND_FINISH);
-    I2CMasterDataPut(i2cPort, configRegMSB);
-    while(I2CMasterBusy(i2cPort));
-    */
 }
 
 float tmp102GetTemp(){
@@ -137,48 +77,35 @@ float tmp102GetTemp(){
     tmp102Communicate(receive, tmpReg, &data);
     data = data >> 3;
 
-    //OLD
-    /*
-    // Set pointer register of tmp102 to the temp register
-    I2CMasterSlaveAddrSet(i2cPort, address, false);
-
-    I2CMasterControl(i2cPort, I2C_MASTER_CMD_SINGLE_SEND);
-    I2CMasterDataPut(i2cPort, tmpReg);
-    while(I2CMasterBusy(i2cPort));
-
-    // Receive temp from tmp102 temp register and convert it to float in celsius
-    I2CMasterSlaveAddrSet(i2cPort, address, true);
-
-    I2CMasterControl(i2cPort, I2C_MASTER_CMD_BURST_RECEIVE_START);
-	while(I2CMasterBusy(i2cPort));
-	data = I2CMasterDataGet(i2cPort) << 5;
-	
-	I2CMasterControl(i2cPort, I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
-	while(I2CMasterBusy(i2cPort));
-	data += I2CMasterDataGet(i2cPort) >> 3;
-    */
-
     return data * conversionFactor;
 }
 
+void tmp102SetHighLimit(uint16_t temp){
+    temp /= conversionFactor;
+    temp = temp << 3;
+    tmp102Communicate(send, highReg, &temp);
+}
+
+void tmp102SetLowLimit(uint16_t temp){
+    temp /= conversionFactor;
+    temp = temp << 3;
+    tmp102Communicate(send, lowReg, &temp);
+}
+
 bool tmp102Alert(void){
-    //IMPLEMENT//
+    tmp102Communicate(receive, configReg, &configRegData);
+    alert = configRegData & AL;
+    return alert;
 }
 
 void tmp102AlertPolarity(bool polarity){
-    //IMPLEMENT//
-}
-
-void tmp102SetHighLimit(uint32_t temp){
-    //IMPLEMENT//
-}
-
-void tmp102SetLowLimit(uint32_t temp){
-    //IMPLEMENT//
+    configRegData |= POL & (polarity << 10);
+    tmp102Communicate(send, configReg, &configRegData);
 }
 
 static void tmp102Communicate(bool dir, uint8_t reg, uint16_t *data){
-
+    // data is broken into most and least significant bytes, since data
+    // is sent one byte at a time over i2c
     uint8_t msb;
     uint8_t lsb;
 
@@ -221,6 +148,7 @@ static void tmp102Communicate(bool dir, uint8_t reg, uint16_t *data){
             lsb = I2CMasterDataGet(i2cPort);
 
             *data = (msb << 8) + lsb;
+
             break;
     }
 }
