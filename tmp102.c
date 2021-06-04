@@ -16,8 +16,7 @@
 //tmp102 config register LSB
 #define     EM  0x0010
 #define     AL  0x0020
-#define     CR0 0x0040
-#define     CR1 0x0080
+#define     CR  0x00C0
 
 //For static tmp102Communicate method clarity
 #define     send    0
@@ -72,7 +71,7 @@ void tmp102Disable(void){
 }
 
 float tmp102GetTemp(){
-    unsigned long data;
+    int16_t data;
 
     tmp102Communicate(receive, tmpReg, &data);
     data = data >> 3;
@@ -80,16 +79,23 @@ float tmp102GetTemp(){
     return data * conversionFactor;
 }
 
-void tmp102SetHighLimit(uint16_t temp){
+void tmp102SetHighLimit(int16_t temp){
     temp /= conversionFactor;
     temp = temp << 3;
     tmp102Communicate(send, highReg, &temp);
 }
 
-void tmp102SetLowLimit(uint16_t temp){
+void tmp102SetLowLimit(int16_t temp){
     temp /= conversionFactor;
     temp = temp << 3;
     tmp102Communicate(send, lowReg, &temp);
+}
+
+void tmp102ConversionRate(uint8_t rate){
+    configRegData &= ~CR;
+    configRegData |= rate << 6;
+
+    tmp102Communicate(send, configReg, &configRegData);
 }
 
 bool tmp102Alert(void){
