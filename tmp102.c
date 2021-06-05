@@ -1,3 +1,41 @@
+/*****************************************************************************
+******************************************************************************
+*tmp102.c
+*TI TMP102 Source File for TM4C123X Microcontrollers
+* 
+*Dan Maher
+*06/05/2021
+*  
+*https://github.com/DanJMaher/TMP102
+*
+*This file defines the functions prototyped and desrived in tmp102.h. See the
+*readme on detailed implementation information.
+******************************************************************************
+******************************************************************************
+MIT License
+
+Copyright (c) 2021 Dan Maher
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+******************************************************************************
+******************************************************************************/
+
 #include "tmp102.h"
 
 //tm102 registers
@@ -10,8 +48,8 @@
 #define     SD  0x0100
 #define     TM  0x0200
 #define     POL 0x0400
-#define     F0  0x0800
-#define     F1  0x1000
+#define     FQ  0x1800
+#define     OS  0x8000
 
 //tmp102 config register LSB
 #define     EM  0x0010
@@ -29,7 +67,6 @@
 uint32_t i2cPort;
 uint32_t address;
 uint16_t configRegData;
-bool alert;
 
 void tmp102Begin(uint8_t addr, uint8_t port){
     address = addr;
@@ -58,15 +95,30 @@ void tmp102Begin(uint8_t addr, uint8_t port){
     tmp102Communicate(send, configReg, &configRegData);
 }
 
-void tmp102Enable(void){
+void tmp102Wake(void){
     // Turns off the Shutdown Mode bit in the config register of the tmp102
     configRegData &= ~SD;
     tmp102Communicate(send, configReg, &configRegData);
 }
 
-void tmp102Disable(void){
+void tmp102Sleep(void){
     // Turns on the Shutdown Mode bit in the config register of the tmp102
     configRegData |= SD;
+    tmp102Communicate(send, configReg, &configRegData);
+}
+
+void tmp102ThermostatMode(bool b){
+    if(b){
+        configRegData |= TM;
+    }else{
+        configRegData &= ~TM;
+    }
+    tmp102Communicate(send, configReg, &configRegData);
+}
+
+void tmp102FaultCount(uint8_t faults){
+    configRegData &= ~FQ;
+    configRegData |= faults << 11;
     tmp102Communicate(send, configReg, &configRegData);
 }
 
@@ -85,10 +137,28 @@ void tmp102SetHighLimit(int16_t temp){
     tmp102Communicate(send, highReg, &temp);
 }
 
+float tmp102GetHighLimit(void){
+    int16_t data;
+
+    tmp102Communicate(receive, highReg, &data);
+    data = data >> 3;
+
+    return data * conversionFactor;
+}
+
 void tmp102SetLowLimit(int16_t temp){
     temp /= conversionFactor;
     temp = temp << 3;
     tmp102Communicate(send, lowReg, &temp);
+}
+
+float tmp102GetLowLimit(void){
+    int16_t data;
+
+    tmp102Communicate(receive, lowReg, &data);
+    data = data >> 3;
+
+    return data * conversionFactor;
 }
 
 void tmp102ConversionRate(uint8_t rate){
@@ -100,13 +170,23 @@ void tmp102ConversionRate(uint8_t rate){
 
 bool tmp102Alert(void){
     tmp102Communicate(receive, configReg, &configRegData);
-    alert = configRegData & AL;
+    bool alert = (configRegData & AL) >> 5;
     return alert;
 }
 
 void tmp102AlertPolarity(bool polarity){
     configRegData |= POL & (polarity << 10);
     tmp102Communicate(send, configReg, &configRegData);
+}
+
+void tmp102OneShot(){
+    configRegData |= OS;
+    tmp102Communicate(send, configReg, &configRegData);
+}
+
+bool tmp102OneShotReady(){
+    tmp102Communicate(receive, configReg, &configRegData);
+    return (configRegData & OS) >> 15;
 }
 
 static void tmp102Communicate(bool dir, uint8_t reg, uint16_t *data){
@@ -157,4 +237,9 @@ static void tmp102Communicate(bool dir, uint8_t reg, uint16_t *data){
 
             break;
     }
+}
+
+uint16_t tmp102ReadConfig(void){
+    tmp102Communicate(receive, configReg, &configRegData);
+    return configRegData;
 }
