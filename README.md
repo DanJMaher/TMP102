@@ -18,6 +18,8 @@ saw no reason to allow the use of 12-bit readings.
 
 ## Getting Started
 
+For function details, please see the function descriptions in the header files.
+
 ### Dependencies
 
 * You must be using TI's TivaWare™ Peripheral Driver Library in order for this driver to work. It can be downloaded here: https://www.ti.com/tool/SW-TM4C
@@ -72,7 +74,7 @@ Dan Maher
 
 ## License
 
-This project is licensed under the MIT License - see the top comments in the .h or .c file fore details
+This project is licensed under the MIT License - see LICENSE.MD for details
 
 ## Acknowledgments
 
