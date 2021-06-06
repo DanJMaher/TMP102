@@ -40,8 +40,9 @@ tmp102Begin(0x48, 0);
 ```
 This statement does three things:
 
-* Saves the device address and port information.
-* Retrieves the current configuration from the sensor, and turns on EM mode (13-bit temperatures)
+* Saves the device address
+* Saves the device's port number
+* Retrieves the current configuration from the sensor and ensures that EM mode (13-bit temperatures) is active
 
 Everytime tmp102Begin() is called, the address and port are overwritten with the new values. This means that you can use multiple TMP102 sensors on different addresses by
 calling the tmp102Begin() function to switch between sensors. Configuration settings are stored in the sensors themselves as long as they maintain power.
@@ -56,37 +57,27 @@ float temp;
 temp = tmp102GetTemp();
 ```
 
-## Help
-
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
-
 ## Authors
 
 Contributors names and contact info
 
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
+Dan Maher
+[LinkedIn](https://www.linkedin.com/in/dan-maher-8404134a/)
+[Github](https://github.com/DanJMaher)
 
 ## Version History
 
-* 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
 * 0.1
     * Initial Release
 
 ## License
 
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
+This project is licensed under the MIT License - see the top comments in the .h or .c file fore details
 
 ## Acknowledgments
 
 Inspiration, code snippets, etc.
-* [awesome-readme](https://github.com/matiassingers/awesome-readme)
-* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [dbader](https://github.com/dbader/readme-template)
-* [zenorocha](https://gist.github.com/zenorocha/4526327)
-* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
+* [Getting Stated with TivaWare](https://www.ti.com/lit/ug/spmu373/spmu373.pdf?ts=1622989782546&ref_url=https%253A%252F%252Fwww.ti.com%252Ftool%252FSW-TM4C)
+* [Tivaware Peripheral Driver Library](https://www.ti.com/lit/ug/spmu298e/spmu298e.pdf?ts=1622989784912&ref_url=https%253A%252F%252Fwww.ti.com%252Ftool%252FSW-TM4C)
+* [SparkFun TMP102 Arduino Driver](https://github.com/sparkfun/SparkFun_TMP102_Arduino_Library)
+(Note: My driver is not based on the SparkFun driver, but I did use theirs as reference material when determining what features to include.)
