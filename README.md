@@ -5,8 +5,10 @@ Simple driver for the TI TMP102 I2C temperature sensor. For use with TI TM4C123X
 ## Description
 
 This is a very basic driver for the TI TMP102 I2C temperature sensor for use with TI TM4C123X microcontrollers. I wrote this driver solely for the learning experience, and
-it is the first MCU driver I've written Because of this, you should use caution when implementing it into your project. The current version contains no error handling or
-detection
+it is the first MCU driver I've made. Because of this, you should use caution when implementing it into your project. The current version contains no error handling or
+detection.
+
+This driver relies heavily on TI's TivaWare™ Peripheral Driver Library. Because of this, it should be portable to all TM3C123X MCUs, but was only tested using a TM4C123GH6PM.
 
 ## Getting Started
 
