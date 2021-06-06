@@ -20,13 +20,13 @@ saw no reason to allow the use of 12-bit readings.
 
 ### Dependencies
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+* You must be using TI's TivaWare™ Peripheral Driver Library in order for this driver to work. It can be downloaded here: https://www.ti.com/tool/SW-TM4C
+* You must be using an MCU compatible with TI's TivaWare™ Peripheral Driver Library. In my case, I used a TM4C123GH6PM.
 
 ### Installing
 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
+* Download tmp.c and tmp.h to your project directory, or another directory and add it to your project's include path.
+* Make sure to add ```#include "tmp102.h"``` to your project.
 
 ### Executing program
 
