@@ -10,6 +10,12 @@ detection.
 
 This driver relies heavily on TI's TivaWare™ Peripheral Driver Library. Because of this, it should be portable to all TM3C123X MCUs, but was only tested using a TM4C123GH6PM.
 
+This driver implements nearly every feature of the TMP102 sensor including temperature readings, alerts, alert polarity adjustment, conversion rate adjustment, shutdown mode,
+comparator mode, interrupt mode, fault queue adjustment, one-shot mode, and high/low limits. 
+
+The only feature I didn't implement was the ability to turn off enhanced mode. Enhanced mode allows for 13-bit temperature readings, and I hardcoded it into this driver. I
+saw no reason to allow the use of 12-bit readings.
+
 ## Getting Started
 
 ### Dependencies
