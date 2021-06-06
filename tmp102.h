@@ -55,7 +55,7 @@ SOFTWARE.
 void tmp102Begin(uint8_t addr, uint8_t port);
 
 // Enables the tmp102. The tmp102 is enabled by default, and this only needs to be
-// called if previously disabled vis tmp102Disable
+// called if previously disabled vis tmp102Sleep
 void tmp102Wake(void);
 
 // Disables the tmp102, saving power by shutting down all device circuitry except 
