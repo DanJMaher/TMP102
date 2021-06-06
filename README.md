@@ -30,11 +30,16 @@ saw no reason to allow the use of 12-bit readings.
 
 ### Executing program
 
-* How to run the program
-* Step-by-step bullets
+In order to use this driver, you must have an I2C port on your MCU configured. Once that is complete, you simply have to initialize your tmp102 sensor by using the
+tmp102begin() function. The arguments are the sensor address (default 0x48) and the I2C port number that you are using. This driver is able to use ports 0-4.
+
+For example, if I wanted to initialize device 0x48 on I2C port 0, I would use the following:
+
 ```
-code blocks for commands
+tmp102Begin(0x48, 0);
 ```
+This statement does three things:
+*Saves the current
 
 ## Help
 
