@@ -39,7 +39,22 @@ For example, if I wanted to initialize device 0x48 on I2C port 0, I would use th
 tmp102Begin(0x48, 0);
 ```
 This statement does three things:
-*Saves the current
+
+* Saves the device address and port information.
+* Retrieves the current configuration from the sensor, and turns on EM mode (13-bit temperatures)
+
+Everytime tmp102Begin() is called, the address and port are overwritten with the new values. This means that you can use multiple TMP102 sensors on different addresses by
+calling the tmp102Begin() function to switch between sensors. Configuration settings are stored in the sensors themselves as long as they maintain power.
+
+After tmp102Begin() is called, you are able to use any of the other functions. If you you want the most basic of functionality, you can immediately start calling
+tmp102GetTemp() after tmp102Begin():
+
+```
+tmp102Begin(0x48, 0);
+
+float temp;
+temp = tmp102GetTemp();
+```
 
 ## Help
 
