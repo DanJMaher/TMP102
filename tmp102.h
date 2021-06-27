@@ -39,17 +39,19 @@ SOFTWARE.
 #ifndef TMP102_H
 #define	TMP102_H
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include "inc/hw_memmap.h"
-#include "driverlib/gpio.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/pin_map.h"
-#include "driverlib/uart.h"
-#include "driverlib/i2c.h"
-#include "tmp102.h"
+/***************************************
+ * Private Functions
+ ***************************************/
+// Internal method to simplify send/receive commands to the tmp102.
+// dir is defined as send/receive, reg is the tmp102 internal register to 
+// send/receive the data from. If dir == send, *data is the 16 bit data
+// sent to reg. If dir == receive, *data is the 16 bit data received from
+// reg.
+static void tmp102Communicate(bool dir, uint8_t reg, uint16_t *data);
 
+/***************************************
+ * Public Functions
+ ***************************************/
 // Configures communication to the given I2C address at the given I2C port
 // and reads tmp102 configuration register to local memory
 void tmp102Begin(uint8_t addr, uint8_t port);
@@ -123,12 +125,5 @@ bool tmp102OneShotReady();
 
 // Utility function for reading the current value of the tmp102's config register
 uint16_t tmp102ReadConfig(void);
-
-// Internal method to simplify send/receive commands to the tmp102.
-// dir is defined as send/receive, reg is the tmp102 internal register to 
-// send/receive the data from. If dir == send, *data is the 16 bit data
-// sent to reg. If dir == receive, *data is the 16 bit data received from
-// reg.
-static void tmp102Communicate(bool dir, uint8_t reg, uint16_t *data);
 
 #endif
