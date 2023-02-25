@@ -4,13 +4,13 @@ Simple driver for the TI TMP102 I2C temperature sensor. For use with TI TM4C123X
 
 ## Description
 
-This is a very basic driver for the TI TMP102 I2C temperature sensor for use with TI TM4C123X microcontrollers. I wrote this driver solely for the learning experience, and it is the first MCU driver I made. Because of this, you should use caution when implementing it into your project. The current version contains no error handling or detection, and was only tested using the limited tools that I had available at the time.
+This is a very basic driver for the TI TMP102 I2C temperature sensor for use with TI TM4C123X microcontrollers.
 
 This driver relies heavily on TI's TivaWare™ Peripheral Driver Library. Because of this, it should be portable to all TM3C123X MCUs, but was only tested using a TM4C123GH6PM.
 
 This driver implements nearly every feature of the TMP102 sensor including temperature readings, alerts, alert polarity adjustment, conversion rate adjustment, shutdown mode, comparator mode, interrupt mode, fault queue adjustment, one-shot mode, and high/low limits. 
 
-The only feature I didn't implement was the ability to turn off enhanced mode. Enhanced mode allows for 13-bit temperature readings, and I hardcoded it into this driver. I saw no reason to allow the use of 12-bit readings.
+The only feature I didn't implement was the ability to turn off enhanced mode. Enhanced mode allows for 13-bit temperature readings, which I hardcoded it into this driver.
 
 ## Getting Started
 
